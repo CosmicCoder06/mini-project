@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Buy Assistant</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-glow glow1"></div>
+    <div class="bg-glow glow2"></div>
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-chart-line"></i>
+            Smart Buy Assistant
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-primary" onclick="toggleChat()">
+                <i class="fas fa-comments"></i>
+                AI Assistant
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="hero-section">
+            <h1 class="hero-title">AI-Powered E-commerce Analytics</h1>
+        </div>
+
+        <div class="search-container">
+            <input 
+                type="text" 
+                class="search-input" 
+                placeholder="Analyze 'sneakers on Amazon' or 'best selling t-shirts Flipkart'..."
+                id="searchInput"
+                onkeypress="handleKeyPress(event)"
+            >
+            <button class="search-btn" onclick="performSearch()">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="feature-title">Real-time Analysis</div>
+                <div class="feature-desc">Get live competitor data and pricing insights instantly</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-search-dollar"></i>
+                </div>
+                <div class="feature-title">Product Research</div>
+                <div class="feature-desc">Discover trending products across Amazon, Flipkart & more</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="feature-title">Sales Estimates</div>
+                <div class="feature-desc">Accurate revenue predictions and sales volume data</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div class="feature-title">Growth Strategies</div>
+                <div class="feature-desc">AI-powered recommendations for your e-commerce success</div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
