@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartBuy — Price Intelligence</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon">📊</div>
+      Smart<span>Buy</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-card">
+    <div class="search-inner">
+      <input class="search-input" id="asinInput" type="text" placeholder="Paste Amazon URL or ASIN (e.g. B0CHX3QBCH)" />
+      <button class="btn-analyze" id="analyzeBtn">Analyze →</button>
+    </div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-banner" id="errorBanner"></div>
+
+  <!-- SKELETON -->
+  <div class="skeleton-dashboard" id="skeleton">
+    <div class="card" style="padding:18px;display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:center">
+      <div class="skeleton" style="width:90px;height:90px;border-radius:12px"></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="skeleton skel-block" style="width:75%"></div>
+        <div class="skeleton skel-block" style="width:45%;height:28px"></div>
+        <div class="skeleton skel-block" style="width:55%;height:12px"></div>
+      </div>
+    </div>
+    <div class="skeleton" style="height:80px;border-radius:var(--r-lg)"></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div class="skeleton" style="height:90px;border-radius:var(--r-lg)"></div>
+      <div class="skeleton" style="height:90px;border-radius:var(--r-lg)"></div>
+      <div class="skeleton" style="height:90px;border-radius:var(--r-lg)"></div>
+      <div class="skeleton" style="height:90px;border-radius:var(--r-lg)"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 220px;gap:16px">
+      <div class="skeleton" style="height:180px;border-radius:var(--r-lg)"></div>
+      <div class="skeleton" style="height:180px;border-radius:var(--r-lg)"></div>
+    </div>
+    <div class="skeleton" style="height:280px;border-radius:var(--r-lg)"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-title">Paste an Amazon ASIN to get started</div>
+      <div class="empty-sub">Get real-time price analysis, deal scoring, trend predictions and seller insights for any Amazon India product.</div>
+    </div>
+
+    <div id="dashboard" style="display:none">
+
+      <!-- PRODUCT HEADER -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="product-header">
+          <div class="product-img-wrap">
+            <img id="productImg" src="" alt="Product" />
+          </div>
+          <div>
+            <div class="product-title" id="productTitle">—</div>
+            <div class="product-price-big" id="productPrice">—</div>
+            <div class="product-badges" id="productBadges"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECOMMENDATION BANNER -->
+      <div class="rec-banner" id="recBanner" style="margin-bottom:20px">
+        <div class="rec-icon" id="recIcon"></div>
+        <div>
+          <div class="rec-label" id="recLabel"></div>
+          <div class="rec-title" id="recTitle"></div>
+          <div class="rec-reason" id="recReason"></div>
+        </div>
+        <div class="rec-ai-pill">✦ AI Analysis</div>
+      </div>
+
+      <!-- STATS -->
+      <div class="section-title">Price Stats</div>
+      <div class="stats-grid" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-label">Avg Price</div>
+          <div class="card-value" id="statAvg">—</div>
+          <div class="card-sub">30-day historical</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Highest</div>
+          <div class="card-value" style="color:var(--red)" id="statHigh">—</div>
+          <div class="card-sub">Peak price</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Lowest</div>
+          <div class="card-value" style="color:var(--green)" id="statLow">—</div>
+          <div class="card-sub">Best ever</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Deviation</div>
+          <div class="card-value" id="statDev">—</div>
+          <div class="card-sub">vs average</div>
+        </div>
+      </div>
+
+      <!-- SELLER + DEAL METER -->
+      <div class="section-title">Seller & Deal</div>
+      <div class="mid-row">
+        <div class="card" id="sellerCard">
+          <div class="card-label">Seller Analysis</div>
+          <div class="seller-details">
+            <div class="seller-stat">
+              <span class="seller-stat-label">⭐ Rating</span>
+              <div>
+                <span class="seller-stat-val" id="sellerRating">—</span>
+                <div class="star-row" id="starRow"></div>
+              </div>
+            </div>
+            <div class="seller-stat">
+              <span class="seller-stat-label">💬 Reviews</span>
+              <span class="seller-stat-val" id="sellerReviews">—</span>
+            </div>
+            <div class="seller-stat">
+              <span class="seller-stat-label">🚚 Delivery</span>
+              <span class="seller-stat-val" style="color:var(--green)">Amazon Fulfilled</span>
+            </div>
+            <div class="seller-stat">
+              <span class="seller-stat-label">🔄 Returns</span>
+              <span class="seller-stat-val" style="color:var(--green)">Easy Returns</span>
+            </div>
+            <div class="reliability-badge" id="reliabilityBadge"></div>
+          </div>
+        </div>
+
+        <div class="card deal-score-card">
+          <div class="card-label" style="text-align:center">Deal Score</div>
+          <div class="gauge-wrap">
+            <canvas id="gaugeCanvas" width="160" height="90"></canvas>
+            <div class="gauge-num" id="gaugeNum">—</div>
+          </div>
+          <div class="gauge-label" id="gaugeLabel">calculating…</div>
+        </div>
+      </div>
+
+      <!-- SAVINGS + PREDICTION -->
+      <div class="section-title">Savings & Forecast</div>
+      <div class="savings-row">
+        <div class="card">
+          <div class="card-label">Savings vs Avg</div>
+          <div class="savings-amount" id="savingsAmt">—</div>
+          <div class="card-sub" id="savingsSub">—</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Predicted Next Week</div>
+          <div class="prediction-range">
+            <div class="pred-val" id="predVal">—</div>
+          </div>
+          <div class="pred-trend" id="predTrend">Based on 30-day moving trend</div>
+        </div>
+      </div>
+
+      <!-- CHART -->
+      <div class="section-title">Price History</div>
+      <div class="card" style="margin-bottom:20px">
+        <div class="chart-wrap">
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
+
+      <!-- ALERT -->
+      <div class="section-title">Price Alert</div>
+      <div class="card alert-card">
+        <div class="card-label">🔔 Set a Price Alert</div>
+        <div style="font-size:.84rem;color:var(--text-secondary);margin-top:4px;margin-bottom:0">
+          We'll notify you when the price drops to your target.
+        </div>
+        <div class="alert-input-row">
+          <span class="alert-prefix">₹</span>
+          <input class="alert-input" id="alertInput" type="number" placeholder="Enter target price…" />
+          <button class="btn-alert" id="alertBtn">Set Alert</button>
+        </div>
+        <div class="alert-set-msg" id="alertMsg"></div>
+      </div>
+
+    </div><!-- /dashboard -->
+  </div><!-- /results -->
+
+</div><!-- /page -->
+
+<script src="app.js"></script>
+</body>
+</html>
